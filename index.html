@@ -7,6 +7,8 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="js/lib/jquery-2.1.4.min.js"></script>
+	<script src="js/lib/TweenMax.min.js"></script>
   <link rel=StyleSheet href="css/style.css" type="text/css">
 </head>
 <body>
@@ -43,6 +45,27 @@
     </div>
   </div>
 </nav>
+
+<div class="container" align="center">
+	<div class="slideShow">
+	</div>
+</div>
+<br><br>
+
+<script src="js/slideShow.js"></script>
+
+
+<script>
+	
+	$.slideShow({
+
+		slides:['img/sl4.jpg','img/sl2.jpg','img/sl3.png','img/sl1.jpg'],
+		intervalo: 2000,
+		velocidad: 1200
+	});
+
+</script>
+
 
 <div class="container">    
   <div class="row">
