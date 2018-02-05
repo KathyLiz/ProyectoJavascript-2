@@ -130,4 +130,33 @@ function validarEmail(email){
     return re.test(String(email).toLowerCase());
 }
 
+(function(){
+	var tipoMaquillaje = "lipstick"
+	var xmlHttp = new XMLHttpRequest();
+	var ARRAY_RESPUESTA = [];
+	xmlHttp.onreadystatechange = function() { 
+	if (xmlHttp.readyState == XMLHttpRequest.DONE) {
+		var obj = JSON.parse(xmlHttp.responseText);
+		// console.log("RESPUESTA", xmlHttp.responseText);
+		if(xmlHttp.responseText){        
+			ARRAY_RESPUESTA = obj;
+			console.log("Nombre",ARRAY_RESPUESTA[0].name);
+			console.log("Precio",ARRAY_RESPUESTA[0].price);
+		}
+		else
+		{
+			console.log("No hay respuesta");        
+		}
+    }
+}
+xmlHttp.open( "GET", "https://makeup-api.herokuapp.com/api/v1/products.json?product_type="+tipoMaquillaje, true ); // false for synchronous request
+xmlHttp.withCredentials = false;
+    //xmlHttp.setRequestHeader('Origin', 'http://192.168.73:81');
+    xmlHttp.send( null );
+
+
+})();
+
+
+
 
