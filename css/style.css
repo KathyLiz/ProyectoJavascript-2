@@ -1,5 +1,10 @@
  /* Remove the navbar's default rounded borders and increase the bottom margin */ 
-    .navbar {
+    
+	h1 {
+    font-family: Helvetica, Geneva, Arial,
+          SunSans-Regular, sans-serif; 
+	}
+	.navbar {
       margin-bottom: 50px;
       border-radius: 0;
     }
@@ -44,9 +49,7 @@
 	border-radius: 100%;
 	width: 15px;
 	height: 15px;
-
 	margin-right: 3px;
-
 	background-color: #a1a1a1;
 }
 
