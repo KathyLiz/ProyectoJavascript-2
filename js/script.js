@@ -6,6 +6,8 @@ var nombre = "Katherine Hurtado";
 var ARRAY_RESPUESTA = [];
 //Función que carga los eventos en los botones del html
 window.onload = function(){
+
+	//Botones que habilitan las tablas desplegables con los productos que se van a comprar
 	$("#lipstick").on("click",getData("lipstick"));
 	$("#lip_liner").on("click",getData("lip_liner"));
 	$("#eyebrow").on("click",getData("eyebrow"));
@@ -142,23 +144,30 @@ function validarRegistro(){
 }
 
 
-
+//Función para hacer peticiones a la API de maquillaje
 function getData(tipoMaquillaje){
 	//var tipoMaquillaje = "lipstick"
 	var xmlHttp = new XMLHttpRequest();
 	
+	//Función que recibe la respuesta del servidor
 	xmlHttp.onreadystatechange = function() { 
+		//Se valida si el estado de la petición está terminado
 		if (xmlHttp.readyState == XMLHttpRequest.DONE) {
+			//Se convierte la respuesta a formato JSON
 			var obj = JSON.parse(xmlHttp.responseText);
 			// console.log("RESPUESTA", xmlHttp.responseText);
-			if(xmlHttp.responseText){        
+			//Se valida si existe una respuesta exitosa
+			if(xmlHttp.responseText){    
+				//Se añade la respuesta a un array    
 				ARRAY_RESPUESTA = obj;
 			}
 			else
 			{
-				console.log("No hay respuesta");        
+				console.log("No hay respuesta",xmlHttp.responseText);        
 			}
 
+			//Se carga la data a las tablas de cada categoria de productos
+			//Para esto se utiliza la biblioteca bootstrap-table
 			switch(tipoMaquillaje){
 				case "lipstick":
 					document.getElementById("tituloTabla").innerHTML="Nuestro Catalogo con las mejores marcas de " + tipoMaquillaje;
@@ -179,15 +188,17 @@ function getData(tipoMaquillaje){
 			}
 	    }
 	}
+//Se envía la petición de forma síncrona
 xmlHttp.open( "GET", "https://makeup-api.herokuapp.com/api/v1/products.json?product_type="+tipoMaquillaje, true ); // false for synchronous request
+//Se evade la validación de credenciales
 xmlHttp.withCredentials = false;
-    //xmlHttp.setRequestHeader('Origin', 'http://192.168.73:81');
-    xmlHttp.send( null );
+//Se envía la petición sin cabeceras.
+xmlHttp.send( null );
 }
 
 //Funciones para adaptar la data 
 function nameFormatter(value, row, index) {
-
+//Se cargan las imágenes y el nombre del producto
     return [
       '<div class="form-inline">',
       '<a title="' + row.name + '" target="_blank">',
@@ -199,13 +210,14 @@ function nameFormatter(value, row, index) {
   }
 
   function priceFormatter(value, row, index) {
-
+  	//Se añade el valor del precio
     return [
       '$ '+ row.price
     ].join('');
   }
 
   function stockFormatter(value, row, index) {
+  	//Se utilizan números al azar para generar el valor del stock
   	var stock = Math.floor((Math.random() * 100) + 1);
     return [
       stock + ' unidades'
@@ -213,6 +225,7 @@ function nameFormatter(value, row, index) {
   }
 
 function buttonFormatter(value, row, index) {
+	//Añade el botón de carrito de compras
     return [
         '<div class="row">',
 		   '<div class="col-sm-6">',
@@ -226,6 +239,8 @@ function buttonFormatter(value, row, index) {
 
 //Funciones para adaptar la data 
 function ratingFormatter(value, row, index) {
+	//se añade una valor aleaatorio
+	//De este valor depende el número de estrellas que se añadan
 	var rating = Math.floor((Math.random() * 4) + 1);
 	var ratingStars = '' ;
 		for(var i = 0; i<rating;i++){
@@ -241,6 +256,7 @@ function ratingFormatter(value, row, index) {
   }
 
 function colorFormatter(value, row, index){
+	//Se recorre el array de colores del producto y se cambian el background de los elementos
 	var array = row.product_colors;
 	var $puntos = $(".selectorButtons");
 	var contenido  =  '<div class="selectorButtons">';
