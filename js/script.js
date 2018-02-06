@@ -1,3 +1,8 @@
+//Alamcena los objetos de compras
+var compras = [];
+//Almacena el valor total de la compra
+var total;
+
 //El valor de esta variable se cambia cuando el login es exitoso
 var login=false;
 //Nombre de usuario que se va a mostrar en la parte superior
@@ -6,6 +11,8 @@ var nombre = "Katherine Hurtado";
 var ARRAY_RESPUESTA = [];
 //Función que carga los eventos en los botones del html
 window.onload = function(){
+
+	//Botones que habilitan las tablas desplegables con los productos que se van a comprar
 	$("#lipstick").on("click",getData("lipstick"));
 	$("#lip_liner").on("click",getData("lip_liner"));
 	$("#eyebrow").on("click",getData("eyebrow"));
@@ -18,7 +25,12 @@ window.onload = function(){
 	}
 
 	//Obtiene el evento click del botón de login
-	$("#userLogin").on("click",function (){
+	$("#userLogin").on("click",loginFunc());
+
+	//$("#carrito").on("click", comprar());
+}
+
+function loginFunc (){
 	var mensaje='<form>'+
   '<div class="form-group">'+
 	    '<label for="userName">Nombre de Usuario</label>'+
@@ -67,9 +79,7 @@ window.onload = function(){
 		        });
 
 
-});
 }
-
 
 
 function validarContactanos(){
@@ -231,23 +241,30 @@ function validarRegistro(){
 }
 
 
-
+//Función para hacer peticiones a la API de maquillaje
 function getData(tipoMaquillaje){
 	//var tipoMaquillaje = "lipstick"
 	var xmlHttp = new XMLHttpRequest();
 	
+	//Función que recibe la respuesta del servidor
 	xmlHttp.onreadystatechange = function() { 
+		//Se valida si el estado de la petición está terminado
 		if (xmlHttp.readyState == XMLHttpRequest.DONE) {
+			//Se convierte la respuesta a formato JSON
 			var obj = JSON.parse(xmlHttp.responseText);
 			// console.log("RESPUESTA", xmlHttp.responseText);
-			if(xmlHttp.responseText){        
+			//Se valida si existe una respuesta exitosa
+			if(xmlHttp.responseText){    
+				//Se añade la respuesta a un array    
 				ARRAY_RESPUESTA = obj;
 			}
 			else
 			{
-				console.log("No hay respuesta");        
+				console.log("No hay respuesta",xmlHttp.responseText);        
 			}
 
+			//Se carga la data a las tablas de cada categoria de productos
+			//Para esto se utiliza la biblioteca bootstrap-table
 			switch(tipoMaquillaje){
 				case "lipstick":
 					document.getElementById("tituloTabla").innerHTML="Nuestro Catalogo con las mejores marcas de " + tipoMaquillaje;
@@ -268,15 +285,17 @@ function getData(tipoMaquillaje){
 			}
 	    }
 	}
+//Se envía la petición de forma síncrona
 xmlHttp.open( "GET", "https://makeup-api.herokuapp.com/api/v1/products.json?product_type="+tipoMaquillaje, true ); // false for synchronous request
+//Se evade la validación de credenciales
 xmlHttp.withCredentials = false;
-    //xmlHttp.setRequestHeader('Origin', 'http://192.168.73:81');
-    xmlHttp.send( null );
+//Se envía la petición sin cabeceras.
+xmlHttp.send( null );
 }
 
 //Funciones para adaptar la data 
 function nameFormatter(value, row, index) {
-
+//Se cargan las imágenes y el nombre del producto
     return [
       '<div class="form-inline">',
       '<a title="' + row.name + '" target="_blank">',
@@ -288,13 +307,14 @@ function nameFormatter(value, row, index) {
   }
 
   function priceFormatter(value, row, index) {
-
+  	//Se añade el valor del precio
     return [
       '$ '+ row.price
     ].join('');
   }
 
   function stockFormatter(value, row, index) {
+  	//Se utilizan números al azar para generar el valor del stock
   	var stock = Math.floor((Math.random() * 100) + 1);
     return [
       stock + ' unidades'
@@ -302,10 +322,11 @@ function nameFormatter(value, row, index) {
   }
 
 function buttonFormatter(value, row, index) {
+	//Añade el botón de carrito de compras
     return [
         '<div class="row">',
 		   '<div class="col-sm-6">',
-	 			'<button type="button" style="margin: 10px 0px;" class="btn btn-primary" href="javascript:void(0)">',
+	 			'<button type="button" style="margin: 10px 0px;" class="btn btn-info" href="javascript:void(0)">',
 					'Añadir al Carrito <i class="glyphicon glyphicon-shopping-cart"></i>',
 				'</button>',
 			'</div>',
@@ -315,6 +336,8 @@ function buttonFormatter(value, row, index) {
 
 //Funciones para adaptar la data 
 function ratingFormatter(value, row, index) {
+	//se añade una valor aleaatorio
+	//De este valor depende el número de estrellas que se añadan
 	var rating = Math.floor((Math.random() * 4) + 1);
 	var ratingStars = '' ;
 		for(var i = 0; i<rating;i++){
@@ -330,6 +353,7 @@ function ratingFormatter(value, row, index) {
   }
 
 function colorFormatter(value, row, index){
+	//Se recorre el array de colores del producto y se cambian el background de los elementos
 	var array = row.product_colors;
 	var $puntos = $(".selectorButtons");
 	var contenido  =  '<div class="selectorButtons">';
@@ -344,4 +368,88 @@ function colorFormatter(value, row, index){
     ].join('');
 }
 
+//Funciones para añadir productos al carrito
+//Añade la imagen del producto que el cliente quiere comprar
+function imageFormatter(value, row, index){
+  	return [
+      '<div>',
+     '<img src="'+row.image_link+'" width="75px"> ',
+      '</div>'
+    ].join('');
+  }
 
+//Acomoda el precio para que se muestre en la tabla de resumen
+  function priceFormatter1(value, row, index) {
+
+    return [
+      '$'+ row.price
+    ].join('');
+  }
+
+//Cuando el usuario da click en el botón de añadir al carrito el producto
+window.operateEvents = {
+		'click .btn-info': function (e, value, row) {
+
+			if(login){
+				BootstrapDialog.alert({
+		            title: 'INFORMACION',
+		            message: "Se añadirá al carrito el producto: <strong style='font-size: 150%;'>"+row.name+"</strong>",
+		            type: BootstrapDialog.TYPE_INFO, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
+		            closable: true, // <-- Default value is false
+		            draggable: true, // <-- Default value is false
+		            buttonLabel: 'Aceptar', // <-- Default value is 'OK',
+		            callback: function(result) {
+		                // result will be true if button was click, while it will be false if users close the dialog directly.
+		                //Si da click en aceptar se añade el producto al carrito
+		                addItem(row);
+
+		            }
+		        });
+			}
+			else{
+				BootstrapDialog.alert({
+		            title: 'ATENCIÓN',
+		            message: "Para realizar cualquier compra es necesario que esté logueado",
+		            type: BootstrapDialog.TYPE_WARNING, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
+		            closable: true, // <-- Default value is false
+		            draggable: true, // <-- Default value is false
+		            buttonLabel: 'Aceptar', // <-- Default value is 'OK',
+		            callback: function(result) {
+		                // result will be true if button was click, while it will be false if users close the dialog directly.
+		                loginFunc();
+		                
+		            }
+		        });
+			}
+			
+        	//alert('You click like action, row: ' + JSON.stringify(row));
+            
+        },
+        'click .btn-default': function (e, value, row) {
+        	alert('You click remove action, row: ' + JSON.stringify(row));
+        	//removeRow(row);
+        }
+	};
+
+//Se añade el producto al arreglo global de comprar
+function addItem(row){
+	//total += parseInt(row.price);
+	//console.log(row.Precio);
+	//console.log("Total",total);
+	compras.push(row);
+	console.log("Total items",compras.length);
+} 
+
+//Se utiliza para visualizar el resumen de compras
+function comprar(){
+	var pi=0;
+	for (var i = 0; i < compras.length; i++) {
+		pi += parseInt(compras[i].price);
+		console.log(compras[i].price);
+	}
+	console.log("Precios",pi);
+	document.getElementById('titleMod').innerHTML='Lista de Compras';
+	document.getElementById('Total').innerHTML="El valor a pagar es: $"+pi;
+	$('#tablaCompras').bootstrapTable('load',compras);
+	//$('#myModal').modal('show'); 
+}
