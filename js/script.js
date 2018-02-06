@@ -7,6 +7,9 @@ var ARRAY_RESPUESTA = [];
 //Función que carga los eventos en los botones del html
 window.onload = function(){
 	$("#lipstick").on("click",getData("lipstick"));
+	$("#lip_liner").on("click",getData("lip_liner"));
+	$("#eyebrow").on("click",getData("eyebrow"));
+	$("#nail_polish").on("click",getData("nail_polish"));
 
 	//login = false;
 	//Si no hay login no se muestra el botón de Carrito de compras
@@ -140,31 +143,46 @@ function validarRegistro(){
 
 
 
- function getData(tipoMaquillaje){
+function getData(tipoMaquillaje){
 	//var tipoMaquillaje = "lipstick"
 	var xmlHttp = new XMLHttpRequest();
 	
 	xmlHttp.onreadystatechange = function() { 
-	if (xmlHttp.readyState == XMLHttpRequest.DONE) {
-		var obj = JSON.parse(xmlHttp.responseText);
-		// console.log("RESPUESTA", xmlHttp.responseText);
-		if(xmlHttp.responseText){        
-			ARRAY_RESPUESTA = obj;
-		}
-		else
-		{
-			console.log("No hay respuesta");        
-		}
-		document.getElementById("tituloTabla").innerHTML="Nuestro Catalogo con las mejores marcas de " + tipoMaquillaje;
-		 $('#tablaBusqueda').bootstrapTable('load',ARRAY_RESPUESTA);
-    }
-}
+		if (xmlHttp.readyState == XMLHttpRequest.DONE) {
+			var obj = JSON.parse(xmlHttp.responseText);
+			// console.log("RESPUESTA", xmlHttp.responseText);
+			if(xmlHttp.responseText){        
+				ARRAY_RESPUESTA = obj;
+			}
+			else
+			{
+				console.log("No hay respuesta");        
+			}
+
+			switch(tipoMaquillaje){
+				case "lipstick":
+					document.getElementById("tituloTabla").innerHTML="Nuestro Catalogo con las mejores marcas de " + tipoMaquillaje;
+					$('#tablaBusqueda').bootstrapTable('load',ARRAY_RESPUESTA);
+					break;
+				case "lip_liner":
+					document.getElementById("tituloTablaL").innerHTML="Nuestro Catalogo con las mejores marcas de delineadores";
+					$('#tablaLabiales').bootstrapTable('load',ARRAY_RESPUESTA);
+					break;
+				case "eyebrow":
+					document.getElementById("tituloTablaC").innerHTML="Nuestro Catalogo con las mejores marcas de productos para Cejas";
+					$('#tablaCejas').bootstrapTable('load',ARRAY_RESPUESTA);
+					break;
+				case "nail_polish":
+					document.getElementById("tituloTablaE").innerHTML="Nuestro Catalogo con las mejores marcas de Esmaltes de Uñas";
+					$('#tablaEsmaltes').bootstrapTable('load',ARRAY_RESPUESTA);
+					break;
+			}
+	    }
+	}
 xmlHttp.open( "GET", "https://makeup-api.herokuapp.com/api/v1/products.json?product_type="+tipoMaquillaje, true ); // false for synchronous request
 xmlHttp.withCredentials = false;
     //xmlHttp.setRequestHeader('Origin', 'http://192.168.73:81');
     xmlHttp.send( null );
-
-
 }
 
 //Funciones para adaptar la data 
