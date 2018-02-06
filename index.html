@@ -9,7 +9,13 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap3-dialog/1.34.9/css/bootstrap-dialog.min.css" rel="stylesheet" type="text/css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap3-dialog/1.34.9/js/bootstrap-dialog.min.js"></script>
-  <script src="js/lib/jquery-2.1.4.min.js"></script>
+ <script src="js/lib/jquery-2.1.4.min.js"></script>
+   <script src="js/lib/bootstrap-table.min.js"></script>
+  <link rel="stylesheet" href = "css/bootstrap-table.min.css" type="text/css"/>
+  <script src="js/lib/bootstrap-table.js"></script>
+  <link rel="stylesheet" href = "css/bootstrap-table.css" type="text/css"/>
+  <script src="js/lib/bootstrap-table-es-MX.js"></script>
+ 
    <script src="js/lib/TweenMax.min.js"></script>
 	<script src="js/script.js"></script>
   <link rel=StyleSheet href="css/style.css" type="text/css">
@@ -76,7 +82,9 @@
       <div class="panel panel-primary">
         <div class="panel-heading">Lipstick Un toque de brillo</div>
         <div class="panel-body"><img src="https://placehold.it/150x80?text=IMAGE" class="img-responsive" style="width:100%" alt="Image"></div>
-        <div class="panel-footer">Buy 50 mobiles and get a gift card</div>
+        <div class="panel-footer">
+          <button type="button" class="btn btn-primary" id="lipstick" data-toggle="collapse" data-target="#demo">Ver más</button>
+        </div>
       </div>
     </div>
     <div class="col-sm-6"> 
@@ -88,6 +96,27 @@
     </div>
   </div>
 </div><br>
+<div class="container"> 
+<div class ="bootstrap-table collapse" id="demo">
+    <h3 id = "tituloTabla"></h3>
+      <table id="tablaBusqueda" data-toggle="table" data-pagination='true' data-card-view="true" data-response-handler="responseHandler0" class="table table-hover" style="margin-top: 0px;">
+      <thead style="display: none;">
+        <tr>
+          <th data-field="name" data-formatter="nameFormatter"></th>
+          <th style="" data-field="rating" data-formatter="ratingFormatter">Rating</th>
+          <th style="" data-field="description">Descripción</th> 
+          <th style="" data-field="brand"> Marca</th>
+          <th style="" data-field="product_type">Tipo</th>          
+          <th style="" data-field="price" data-formatter="priceFormatter">Precio</th>    
+          <th style="" data-field="stock" data-formatter="stockFormatter">Stock</th>  
+          <th style="" data-field="product_colors" data-formatter="colorFormatter">Colores</th>       
+          <th style="" data-field="id" data-events="operateEvents" data-formatter="buttonFormatter">
+          </th>
+        </tr>
+      </thead>
+   </table>
+    </div>
+</div>
 
 <div class="container">    
   <div class="row">

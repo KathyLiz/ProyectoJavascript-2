@@ -2,8 +2,12 @@
 var login=false;
 //Nombre de usuario que se va a mostrar en la parte superior
 var nombre = "Katherine Hurtado";
+
+var ARRAY_RESPUESTA = [];
 //Función que carga los eventos en los botones del html
 window.onload = function(){
+	$("#lipstick").on("click",getData("lipstick"));
+
 	//login = false;
 	//Si no hay login no se muestra el botón de Carrito de compras
 	if(!login){
@@ -134,24 +138,25 @@ function validarRegistro(){
 	var forma = document.getElementById("registerForm")
 }
 
-(function(){
-	var tipoMaquillaje = "lipstick"
+
+
+ function getData(tipoMaquillaje){
+	//var tipoMaquillaje = "lipstick"
 	var xmlHttp = new XMLHttpRequest();
-	var ARRAY_RESPUESTA = [];
+	
 	xmlHttp.onreadystatechange = function() { 
 	if (xmlHttp.readyState == XMLHttpRequest.DONE) {
 		var obj = JSON.parse(xmlHttp.responseText);
 		// console.log("RESPUESTA", xmlHttp.responseText);
 		if(xmlHttp.responseText){        
 			ARRAY_RESPUESTA = obj;
-			console.log("Nombre",ARRAY_RESPUESTA[0].name);
-			console.log("Precio",ARRAY_RESPUESTA[0].price);
-			console.log(ARRAY_RESPUESTA)
 		}
 		else
 		{
 			console.log("No hay respuesta");        
 		}
+		document.getElementById("tituloTabla").innerHTML="Nuestro Catalogo con las mejores marcas de " + tipoMaquillaje;
+		 $('#tablaBusqueda').bootstrapTable('load',ARRAY_RESPUESTA);
     }
 }
 xmlHttp.open( "GET", "https://makeup-api.herokuapp.com/api/v1/products.json?product_type="+tipoMaquillaje, true ); // false for synchronous request
@@ -160,8 +165,76 @@ xmlHttp.withCredentials = false;
     xmlHttp.send( null );
 
 
-})();
+}
 
+//Funciones para adaptar la data 
+function nameFormatter(value, row, index) {
 
+    return [
+      '<div class="form-inline">',
+      '<a title="' + row.name + '" target="_blank">',
+      '<img src="'+row.image_link+'" width="150px"> ',
+      '</a>',
+      '<strong>  '+row.name+' </strong>',
+      '</div>'
+    ].join('');
+  }
+
+  function priceFormatter(value, row, index) {
+
+    return [
+      '$ '+ row.price
+    ].join('');
+  }
+
+  function stockFormatter(value, row, index) {
+  	var stock = Math.floor((Math.random() * 100) + 1);
+    return [
+      stock + ' unidades'
+    ].join('');
+  }
+
+function buttonFormatter(value, row, index) {
+    return [
+        '<div class="row">',
+		   '<div class="col-sm-6">',
+	 			'<button type="button" style="margin: 10px 0px;" class="btn btn-primary" href="javascript:void(0)">',
+					'Añadir al Carrito <i class="glyphicon glyphicon-shopping-cart"></i>',
+				'</button>',
+			'</div>',
+	'</div>'
+    ].join('');
+  }
+
+//Funciones para adaptar la data 
+function ratingFormatter(value, row, index) {
+	var rating = Math.floor((Math.random() * 4) + 1);
+	var ratingStars = '' ;
+		for(var i = 0; i<rating;i++){
+			ratingStars += '<img src="img/star1.png" class="imgRating">'
+		}
+
+    return [
+      '<div class="name">',
+      ratingStars,
+      '<img src="img/star2.png" class="imgRating">',
+      '</div>'
+    ].join('');
+  }
+
+function colorFormatter(value, row, index){
+	var array = row.product_colors;
+	var $puntos = $(".selectorButtons");
+	var contenido  =  '<div class="selectorButtons">';
+		for( var i=0; i< array.length; i++ ){
+			//console.log("ARRAY", array[i].hex_value);
+			contenido += '<div data-idx="'+ i +'" class="selectorButton" style="background-color:'+array[i].hex_value+';"></div>';
+		}
+
+		 return [
+      contenido,
+      '</div>'
+    ].join('');
+}
 
 
