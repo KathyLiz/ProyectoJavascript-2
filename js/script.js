@@ -130,6 +130,10 @@ function validarEmail(email){
     return re.test(String(email).toLowerCase());
 }
 
+function validarRegistro(){
+	var forma = document.getElementById("registerForm")
+}
+
 (function(){
 	var tipoMaquillaje = "lipstick"
 	var xmlHttp = new XMLHttpRequest();
@@ -142,6 +146,7 @@ function validarEmail(email){
 			ARRAY_RESPUESTA = obj;
 			console.log("Nombre",ARRAY_RESPUESTA[0].name);
 			console.log("Precio",ARRAY_RESPUESTA[0].price);
+			console.log(ARRAY_RESPUESTA)
 		}
 		else
 		{
