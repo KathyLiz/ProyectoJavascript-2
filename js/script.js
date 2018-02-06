@@ -137,8 +137,97 @@ function validarEmail(email){
     return re.test(String(email).toLowerCase());
 }
 
+function validarCedula(cedula) {
+	var cad = cedula
+    var total = 0;
+    var longitud = cad.length;
+    var longcheck = longitud - 1;
+    if (cad !== "" && longitud === 10){
+    	for(i = 0; i < longcheck; i++){
+    		if (i%2 === 0) {
+    			var aux = cad.charAt(i) * 2;
+    			if (aux > 9) aux -= 9;
+    			total += aux;
+            }
+            else 
+            {
+            total += parseInt(cad.charAt(i)); // parseInt o concatenará en lugar de sumar
+            }
+          }
+
+          total = total % 10 ? 10 - total % 10 : 0;
+
+          if (cad.charAt(longitud-1) == total) {
+            return true;
+          }else{
+            return false;
+          }
+        }
+}
+
+
 function validarRegistro(){
 	var forma = document.getElementById("registerForm")
+	var nombres = $("#nombres").val()
+	var apellidos = $("#apellidos").val()
+	var correo = $("#mail").val()
+	var edad = $("#edad").val()
+	var pais = $('#country').find(":selected").text();
+	var cedula = $("#cedula").val()
+
+	var validarMail = validarEmail(correo)
+	var validarCed = validarCedula(cedula)
+
+	if(nombres==="" || apellidos ==="" || correo ==="" || edad ==="" || cedula ==="")
+	{
+		BootstrapDialog.alert({
+			title: 'ATENCIÓN',
+	        message: 'No se admiten campos vacíos',
+	        type: BootstrapDialog.TYPE_WARNING, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
+	        closable: true, // <-- Default value is false
+	        draggable: true, // <-- Default value is false
+	        buttonLabel: 'Aceptar', // <-- Default value is 'OK',
+	        callback: function(result) {
+	            // result will be true if button was click, while it will be false if users close the dialog directly.
+	            $('html, body').animate({
+			        scrollTop: $("#contactanos").offset().top
+			    }, 500);
+	        }
+       	});
+	}
+	else if(!validarMail||!validarCed){
+				BootstrapDialog.alert({
+		            title: 'ATENCIÓN',
+		            message: 'La dirección de correo electrónico o la cédula son incorrectos',
+		            type: BootstrapDialog.TYPE_WARNING, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
+		            closable: true, // <-- Default value is false
+		            draggable: true, // <-- Default value is false
+		            buttonLabel: 'Aceptar', // <-- Default value is 'OK',
+		            callback: function(result) {
+		                // result will be true if button was click, while it will be false if users close the dialog directly.
+		                $('html, body').animate({
+					        scrollTop: $("#contactanos").offset().top
+					    }, 500);
+		            }
+		        });
+		}
+		else{
+				BootstrapDialog.alert({
+		            title: 'INFORMACION',
+		            message: nombres + ', gracias por registrarte en nuestra página, puedes hacer compras ahora',
+		            type: BootstrapDialog.TYPE_INFO, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
+		            closable: true, // <-- Default value is false
+		            draggable: true, // <-- Default value is false
+		            buttonLabel: 'Aceptar', // <-- Default value is 'OK',
+		           /* callback: function(result) {
+		                // result will be true if button was click, while it will be false if users close the dialog directly.
+		                $('html, body').animate({
+					        scrollTop: $("#contactanos").offset().top
+					    }, 500);
+		            }*/
+		        });
+			}
+
 }
 
 
