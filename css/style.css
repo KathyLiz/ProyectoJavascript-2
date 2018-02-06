@@ -20,7 +20,11 @@
       padding: 25px;
     }
 	
-	
+
+.imgSlide{
+	width: 800px;
+	height: 425px;
+}	
 .slideShow{
 	/*background-color: red;*/
 	width: 800px;
@@ -108,5 +112,15 @@ input[type=submit]:hover {
 	margin-right: 3px;
 
 	background-color: #a1a1a1;
+}
+
+#icono{
+	/*background-color: red;*/
+	width: 60px;
+	height: 40px;
+	overflow: hidden;
+	margin-right:100px;
+	margin-bottom: 10px;
+	
 }
 

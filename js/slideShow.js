@@ -36,7 +36,7 @@
 			
 			contenido += "<ul>"
 			for( var i=0; i< opciones.slides.length; i++ ){
-				contenido += '<li><img src="'+ opciones.slides[i] +'"></li>';
+				contenido += '<li><img class = "imgSlide" src="'+ opciones.slides[i] +'"></li>';
 			}
 			contenido +="</ul>";
 
@@ -50,7 +50,7 @@
 		contenido  = "";
 		contenido += '<div class="slideShowButtons">';
 		for( var i=0; i< opciones.slides.length; i++ ){
-			contenido += '<div data-idx="'+ i +'" class="slideButton"></div>';
+			contenido += '<div data-idx="'+ i +'" class="slideButtons"><img id="icono" src="'+ opciones.slides[i] +'"></div>';
 		}
 		contenido += "</div>";
 
@@ -117,7 +117,7 @@
 
 
 
-		$(".slideButton").on("click",function(){
+		$(".slideButtons").on("click",function(){
 
 			var idx =$(this).data("idx");
 			idx = idx *-1;
