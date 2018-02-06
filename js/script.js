@@ -1,3 +1,8 @@
+//Alamcena los objetos de compras
+var compras = [];
+//Almacena el valor total de la compra
+var total;
+
 //El valor de esta variable se cambia cuando el login es exitoso
 var login=false;
 //Nombre de usuario que se va a mostrar en la parte superior
@@ -20,7 +25,12 @@ window.onload = function(){
 	}
 
 	//Obtiene el evento click del botón de login
-	$("#userLogin").on("click",function (){
+	$("#userLogin").on("click",loginFunc());
+
+	//$("#carrito").on("click", comprar());
+}
+
+function loginFunc (){
 	var mensaje='<form>'+
   '<div class="form-group">'+
 	    '<label for="userName">Nombre de Usuario</label>'+
@@ -69,9 +79,7 @@ window.onload = function(){
 		        });
 
 
-});
 }
-
 
 
 function validarContactanos(){
@@ -229,7 +237,7 @@ function buttonFormatter(value, row, index) {
     return [
         '<div class="row">',
 		   '<div class="col-sm-6">',
-	 			'<button type="button" style="margin: 10px 0px;" class="btn btn-primary" href="javascript:void(0)">',
+	 			'<button type="button" style="margin: 10px 0px;" class="btn btn-info" href="javascript:void(0)">',
 					'Añadir al Carrito <i class="glyphicon glyphicon-shopping-cart"></i>',
 				'</button>',
 			'</div>',
@@ -271,4 +279,88 @@ function colorFormatter(value, row, index){
     ].join('');
 }
 
+//Funciones para añadir productos al carrito
+//Añade la imagen del producto que el cliente quiere comprar
+function imageFormatter(value, row, index){
+  	return [
+      '<div>',
+     '<img src="'+row.image_link+'" width="75px"> ',
+      '</div>'
+    ].join('');
+  }
 
+//Acomoda el precio para que se muestre en la tabla de resumen
+  function priceFormatter1(value, row, index) {
+
+    return [
+      '$'+ row.price
+    ].join('');
+  }
+
+//Cuando el usuario da click en el botón de añadir al carrito el producto
+window.operateEvents = {
+		'click .btn-info': function (e, value, row) {
+
+			if(login){
+				BootstrapDialog.alert({
+		            title: 'INFORMACION',
+		            message: "Se añadirá al carrito el producto: <strong style='font-size: 150%;'>"+row.name+"</strong>",
+		            type: BootstrapDialog.TYPE_INFO, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
+		            closable: true, // <-- Default value is false
+		            draggable: true, // <-- Default value is false
+		            buttonLabel: 'Aceptar', // <-- Default value is 'OK',
+		            callback: function(result) {
+		                // result will be true if button was click, while it will be false if users close the dialog directly.
+		                //Si da click en aceptar se añade el producto al carrito
+		                addItem(row);
+
+		            }
+		        });
+			}
+			else{
+				BootstrapDialog.alert({
+		            title: 'ATENCIÓN',
+		            message: "Para realizar cualquier compra es necesario que esté logueado",
+		            type: BootstrapDialog.TYPE_WARNING, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
+		            closable: true, // <-- Default value is false
+		            draggable: true, // <-- Default value is false
+		            buttonLabel: 'Aceptar', // <-- Default value is 'OK',
+		            callback: function(result) {
+		                // result will be true if button was click, while it will be false if users close the dialog directly.
+		                loginFunc();
+		                
+		            }
+		        });
+			}
+			
+        	//alert('You click like action, row: ' + JSON.stringify(row));
+            
+        },
+        'click .btn-default': function (e, value, row) {
+        	alert('You click remove action, row: ' + JSON.stringify(row));
+        	//removeRow(row);
+        }
+	};
+
+//Se añade el producto al arreglo global de comprar
+function addItem(row){
+	//total += parseInt(row.price);
+	//console.log(row.Precio);
+	//console.log("Total",total);
+	compras.push(row);
+	console.log("Total items",compras.length);
+} 
+
+//Se utiliza para visualizar el resumen de compras
+function comprar(){
+	var pi=0;
+	for (var i = 0; i < compras.length; i++) {
+		pi += parseInt(compras[i].price);
+		console.log(compras[i].price);
+	}
+	console.log("Precios",pi);
+	document.getElementById('titleMod').innerHTML='Lista de Compras';
+	document.getElementById('Total').innerHTML="El valor a pagar es: $"+pi;
+	$('#tablaCompras').bootstrapTable('load',compras);
+	//$('#myModal').modal('show'); 
+}

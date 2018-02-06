@@ -49,7 +49,11 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li><a href="javascript:void(0)"  id="userLogin"><span class="glyphicon glyphicon-user"></span>  Ingresar</a></li>
-        <li><a href="#" id = "carrito"><span class="glyphicon glyphicon-shopping-cart"></span> Carrito de Compras </a></li>
+        <li><!--<a href="javascript:void(0)" id = "carrito" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-shopping-cart"></span> Ver mis Compras </a>-->
+          <span class="glyphicon glyphicon-shopping-cart"></span>
+           <button type="button" id="carrito" data-toggle="modal" data-target="#myModal" class="btn btn-success" style="margin: 30px 0px;" onclick="comprar()">Finalizar Compra
+          <i class="glyphicon glyphicon-saved"></i></button>
+        </li>
       </ul>
     </div>
   </div>
@@ -209,6 +213,9 @@
     </div>
 </div>
 
+
+
+
 <br><br>
 
 <div class="container" id="contactanos">
@@ -240,6 +247,53 @@
         <input type="button" onclick="validarContactanos()" value="Submit">
   </form>
 </div>
+
+
+
+ <div class="modal fade" id="myModal">
+  <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header" style="background-color:#428bca">
+          <h3 class="modal-title" id="titleMod" style="color:#f9f9f9"></h3>
+        </div>
+        <div class="modal-body">          
+          <div>
+          <table id='tablaCompras' 
+        data-toolbar="#toolbar_rango"
+        data-show-export='false'
+        data-pagination='true'  
+        data-show-columns="true"        
+        data-toggle='table'       
+        data-search='false'  
+        data-striped='false'
+        data-search-align='right'
+        data-sortable='true'>
+        <thead>
+        <tr> 
+          <th data-field="id">Código</th>          
+          <th data-field="imagen" data-formatter="imageFormatter">Imagen</th>
+           <th data-field="name">Nombre</th>                  
+          <th align="center" style="" data-field="description">Descripción</th>                         
+          <th data-field="price" data-formatter="priceFormatter1">Precio</th> 
+        </tr>
+        </thead>    
+      </table>
+    </div>
+    <div>
+            <h3 id="Total"></h3>
+          </div>
+    </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary " data-dismiss="modal">Aceptar</button>
+        </div>
+        
+        
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+
+
 
 
 <footer class="container-fluid text-center">
